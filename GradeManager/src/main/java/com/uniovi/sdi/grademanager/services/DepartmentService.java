@@ -30,18 +30,11 @@ public class DepartmentService {
     }
 
     public Department updateDepartment(Department department) {
-        int updatedRows = departmentRepository.updateDepartment(
-                department.getId(),
-                department.getName(),
-                department.getCode(),
-                department.getFaculty(),
-                department.getPhone(),
-                department.getProfessors()
-        );
-        if (updatedRows == 0) {
-            return null;
+        Department oldDepartment = findById(department.getId());
+        if (oldDepartment != null) {
+            oldDepartment.setName(department.getName());
         }
-        return departmentRepository.findById(department.getId()).orElse(null);
+        return departmentRepository.save(department);
     }
 
     public Department deleteDepartment(Long id) {
