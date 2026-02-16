@@ -35,6 +35,9 @@ public class DepartmentController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Department> deleteDepartment(@PathVariable Long id) {
         Department deleted = departmentService.deleteDepartment(id);
+        if (deleted == null) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok(deleted);
     }
 
@@ -57,6 +60,9 @@ public class DepartmentController {
                 department.getProfessors()
         );
         Department updated = departmentService.updateDepartment(departmentToUpdate);
+        if (updated == null) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok(updated);
     }
 

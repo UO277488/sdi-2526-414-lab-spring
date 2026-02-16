@@ -1,57 +1,55 @@
 package com.uniovi.sdi.grademanager.services;
 
 import com.uniovi.sdi.grademanager.entities.Department;
+import com.uniovi.sdi.grademanager.repositories.DepartmentRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class DepartmentService {
-    //private DepartmentRepository departmentRepository
+    private final DepartmentRepository departmentRepository;
+
+    public DepartmentService(DepartmentRepository departmentRepository) {
+        this.departmentRepository = departmentRepository;
+    }
 
     public List<Department> findAll() {
-        Department department1 = new Department(1L, "Informatica", "INF", "Escuela de Ingenieria Informatica", 985100001, 40);
-        Department department2 = new Department(2L, "Matematicas", "MAT", "Facultad de Ciencias", 985100002, 28);
-        Department department3 = new Department(3L, "Fisica", "FIS", "Facultad de Ciencias", 985100003, 22);
-        Department department4 = new Department(4L, "Quimica", "QUI", "Facultad de Ciencias", 985100004, 24);
-        Department department5 = new Department(5L, "Economia", "ECO", "Facultad de Economia y Empresa", 985100005, 30);
-
-        return List.of(department1, department2, department3, department4, department5);
+        List<Department> departments = new ArrayList<>();
+        departmentRepository.findAll().forEach(departments::add);
+        return departments;
     }
 
     public Department findById(Long id) {
-        Department department1 = new Department(1L, "Informatica", "INF", "Escuela de Ingenieria Informatica", 985100001, 40);
-        Department department2 = new Department(2L, "Matematicas", "MAT", "Facultad de Ciencias", 985100002, 28);
-        Department department3 = new Department(3L, "Fisica", "FIS", "Facultad de Ciencias", 985100003, 22);
-        Department department4 = new Department(4L, "Quimica", "QUI", "Facultad de Ciencias", 985100004, 24);
-        Department department5 = new Department(5L, "Economia", "ECO", "Facultad de Economia y Empresa", 985100005, 30);
-
-        List<Department> departments = List.of(department1, department2, department3, department4, department5);
-
-        for (Department department : departments) {
-            if (department.getId().equals(id)) {
-                return department;
-            }
-        }
-        return null;
+        return departmentRepository.findById(id).orElse(null);
     }
 
     public Department saveDepartment(Department department) {
-        //TODO: Temporal
-        Department newDepartment = department;
-        return newDepartment;
+        return departmentRepository.save(department);
     }
 
     public Department updateDepartment(Department department) {
-        //TODO: Temporal
-        Department newDepartment = department;
-        return newDepartment;
+        int updatedRows = departmentRepository.updateDepartment(
+                department.getId(),
+                department.getName(),
+                department.getCode(),
+                department.getFaculty(),
+                department.getPhone(),
+                department.getProfessors()
+        );
+        if (updatedRows == 0) {
+            return null;
+        }
+        return departmentRepository.findById(department.getId()).orElse(null);
     }
 
     public Department deleteDepartment(Long id) {
-        //TODO Temporal
-        Department newDepartment = new Department(id, "Informatica", "INF", "Escuela de Ingenieria Informatica", 985100001, 40);
-
-        return newDepartment;
+        Department department = departmentRepository.findById(id).orElse(null);
+        if (department == null) {
+            return null;
+        }
+        departmentRepository.deleteById(id);
+        return department;
     }
 }
