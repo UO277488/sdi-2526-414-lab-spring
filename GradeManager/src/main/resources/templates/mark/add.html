@@ -1,0 +1,36 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head">
+  <title>Página de añadido de notas</title>
+</head>
+<body>
+
+<nav th:replace="fragments/nav"></nav>
+
+<div class="container" id="main-container">
+  <h2>Agregar nota</h2>
+  <form class="form-horizontal" method="post" action="/mark/add">
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="description">Descripción:</label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" id="description" name="description" placeholder="Ejemplo Ejercicio 1" required="true" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="score">Puntuación:</label>
+      <div class="col-sm-10">          
+        <input type="number" class="form-control" id="score" name="score" placeholder="Entre 0 y 10" required="true" />
+      </div>
+    </div>
+    <div class="form-group">        
+      <div class="col-sm-offset-2 col-sm-10">
+        <button type="submit" class="btn btn-primary">Enviar</button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<footer th:replace="fragments/footer"></footer>
+
+</body>
+</html>

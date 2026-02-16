@@ -2,12 +2,10 @@ package com.uniovi.sdi.grademanager.services;
 
 import com.uniovi.sdi.grademanager.entities.Mark;
 import com.uniovi.sdi.grademanager.repositories.MarksRepository;
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -17,7 +15,7 @@ public class MarksService {
     private MarksRepository marksRepository;
 
     public List<Mark> getMarks() {
-        List<Mark> marks = new ArrayList<Mark>();
+        List<Mark> marks = new ArrayList<>();
         marksRepository.findAll().forEach(marks::add);
         return marks;
     }
