@@ -9,18 +9,26 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 public class MarksController {
-    @Autowired //Inyectar el servicio
     private MarksService marksService;
 
-
+    public MarksController(MarksService marksService){
+        this.marksService = marksService;
+    }
 
     @GetMapping(value = "/mark/add")
     public String getMark() {
         return "mark/add";
     }
-    @RequestMapping(value = "/mark/list", method = RequestMethod.GET)
+
+    @PostMapping(value = "/mark/add")
+    public String setMark(@ModelAttribute Mark mark) {
+        marksService.addMark(mark);
+        return "redirect:/mark/list";
+    }
+
+    @GetMapping ("/mark/list")
     public String getList(Model model) {
-        model.addAttribute("markList", marksService.getMarks());
+        model.addAttribute("marksList", marksService.getMarks());
         return "mark/list";
     }
 
@@ -47,5 +55,11 @@ public class MarksController {
         mark.setId(id);
         marksService.addMark(mark);
         return "redirect:/mark/details/"+id;
+    }
+
+    @GetMapping("/mark/list/update")
+    public String updateList(Model model){
+        model.addAttribute("marksList", marksService.getMarks() );
+        return "mark/list :: marksTable";
     }
 }
