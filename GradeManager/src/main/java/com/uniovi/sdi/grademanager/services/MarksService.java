@@ -10,9 +10,11 @@ import java.util.List;
 
 @Service
 public class MarksService {
+    private final MarksRepository marksRepository;
 
-    @Autowired
-    private MarksRepository marksRepository;
+    public MarksService(MarksRepository marksRepository) {
+        this.marksRepository = marksRepository;
+    }
 
     public List<Mark> getMarks() {
         List<Mark> marks = new ArrayList<>();

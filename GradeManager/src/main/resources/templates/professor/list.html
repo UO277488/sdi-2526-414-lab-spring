@@ -1,0 +1,36 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head">
+    <title th:text="#{professor.list.page.title}">Professors list page</title>
+</head>
+<body>
+<nav th:replace="fragments/nav"></nav>
+
+<div class="container" id="main-container">
+    <h2 th:text="#{professor.list.title}">Professors</h2>
+    <p th:text="#{professor.list.subtitle}">The professors currently in the system are the following:</p>
+
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col" th:text="#{professor.table.dni}">DNI</th>
+                <th scope="col" th:text="#{professor.table.name}">Name</th>
+                <th scope="col" th:text="#{professor.table.lastName}">Last name</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="professor : ${professorsList}">
+                <td th:text="${professor.dni}">11111111P</td>
+                <td th:text="${professor.name}">Ana</td>
+                <td th:text="${professor.lastName}">López</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div th:if="${#lists.isEmpty(professorsList)}" th:text="#{professor.list.empty}">No professors</div>
+</div>
+
+<footer th:replace="fragments/footer"></footer>
+</body>
+</html>

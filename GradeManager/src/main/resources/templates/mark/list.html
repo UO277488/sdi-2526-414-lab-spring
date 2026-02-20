@@ -21,6 +21,7 @@
             <thead>
             <tr>
                 <th scope="col" th:text="#{mark.table.id}">id</th>
+                <th scope="col" th:text="#{mark.table.user}">Usuario</th>
                 <th scope="col" th:text="#{mark.table.description}">Descripción</th>
                 <th scope="col" th:text="#{mark.table.score}">Puntuación</th>
                 <th scope="col"></th>
@@ -31,11 +32,12 @@
             <tbody>
             <tr th:each="mark : ${marksList}">
                 <td scope="row" th:text="${mark.id}"> 1</td>
+                <td th:text="${mark.user != null ? mark.user.dni : '-'}">99999990A</td>
                 <td th:text="${mark.description}"> Ejercicio 1</td>
                 <td th:text="${mark.score}">10</td>
                 <td><a th:href="${'/mark/details/' + mark.id}" th:text="#{mark.action.details}">detalles</a></td>
                 <td><a th:href="${'/mark/edit/' + mark.id}" th:text="#{mark.action.edit}">modificar</a></td>
-                <td><a th:href="${'/mark/delete/' + mark.id}" th:text="#{mark.action.delete}" th:onclick="|return confirm('${#messages.msg('dialog.delete.confirm')}');|">eliminar</a></td>
+                <td><a th:href="${'/mark/delete/' + mark.id}" th:text="#{mark.action.delete}" th:onclick="|return confirm('#{dialog.delete.confirm}');|">eliminar</a></td>
             </tr>
             </tbody>
         </table>
