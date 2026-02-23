@@ -41,6 +41,16 @@ public class UsersService {
         }
         usersRepository.save(user);
     }
+    public void updateUserProfile(Long id, User editedUser) {
+        User existingUser = usersRepository.findById(id).orElse(null);
+        if (existingUser == null) {
+            return;
+        }
+        existingUser.setDni(editedUser.getDni());
+        existingUser.setName(editedUser.getName());
+        existingUser.setLastName(editedUser.getLastName());
+        usersRepository.save(existingUser);
+    }
     public User getUserByDni(String dni) {
         return usersRepository.findByDni(dni);
     }

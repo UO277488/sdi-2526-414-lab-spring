@@ -64,9 +64,14 @@ public class UsersController {
 
     @PostMapping(value = "/user/edit/{id}")
     public String setEdit(@PathVariable Long id, @ModelAttribute User user) {
-        user.setId(id);
-        usersService.addUser(user);
+        usersService.updateUserProfile(id, user);
         return "redirect:/user/details/" + id;
+    }
+
+    @GetMapping("/user/list/update")
+    public String updateList(Model model){
+        model.addAttribute("usersList", usersService.getUsers());
+        return "fragments/usersTable :: usersTable";
     }
 
     @GetMapping("/signup")

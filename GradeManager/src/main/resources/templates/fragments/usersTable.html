@@ -1,0 +1,25 @@
+<div class="table-responsive" th:fragment="usersTable">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col" th:text="#{user.table.dni}">DNI</th>
+            <th scope="col" th:text="#{user.table.name}">Nombre</th>
+            <th scope="col" th:text="#{user.table.lastName}">Apellidos</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${usersList}">
+            <td th:text="${user.dni}">71888888X</td>
+            <td th:text="${user.name}">Nombre del alumno</td>
+            <td th:text="${user.lastName}">Apellidos del alumno</td>
+            <td><a th:href="${'/user/details/' + user.id}" th:text="#{user.action.details}">details</a></td>
+            <td><a th:href="${'/user/edit/' + user.id}" th:text="#{user.action.edit}">edit</a></td>
+            <td><a th:href="${'/user/delete/' + user.id}" th:text="#{user.action.delete}" th:onclick="|return confirm('#{user.dialog.delete.confirm}');|">delete</a></td>
+        </tr>
+        </tbody>
+    </table>
+    <div th:if="${#lists.isEmpty(usersList)}" th:text="#{user.list.empty}">No hay usuarios</div>
+</div>

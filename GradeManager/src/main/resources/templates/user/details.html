@@ -1,0 +1,35 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head">
+    <title th:text="#{user.details.page.title}">Página de detalles del usuario</title>
+</head>
+<body>
+<nav th:replace="fragments/nav"></nav>
+
+<div class="container" id="main-container">
+    <h2 th:text="#{user.details.title}">Detalles del usuario</h2>
+    <div class="card">
+        <div class="card-header" th:text="#{user.form.dni}">DNI</div>
+        <div class="card-body">
+            <p class="card-text" th:text="${user != null ? user.dni : '-'}">88888847X</p>
+        </div>
+    </div>
+    <br>
+    <div class="card">
+        <div class="card-header" th:text="#{user.form.name}">Nombre</div>
+        <div class="card-body">
+            <p class="card-text" th:text="${user != null ? user.name : '-'}">Juan</p>
+        </div>
+    </div>
+    <br>
+    <div class="card">
+        <div class="card-header" th:text="#{user.form.lastName}">Apellidos</div>
+        <div class="card-body">
+            <p class="card-text" th:text="${user != null ? user.lastName : '-'}">Pérez</p>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="fragments/footer"></footer>
+</body>
+</html>

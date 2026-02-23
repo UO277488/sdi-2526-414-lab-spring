@@ -1,0 +1,33 @@
+<div class="table-responsive" th:fragment="professorsTable">
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col" th:text="#{professor.table.dni}">DNI</th>
+            <th scope="col" th:text="#{professor.table.name}">Name</th>
+            <th scope="col" th:text="#{professor.table.lastName}">Last name</th>
+            <th scope="col" th:text="#{professor.table.category}">Category</th>
+            <th scope="col" th:text="#{professor.table.department}">Department</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="professor : ${professorsList}">
+            <td th:text="${professor.dni}">11111111P</td>
+            <td th:text="${professor.name}">Ana</td>
+            <td th:text="${professor.lastName}">López</td>
+            <td>
+                <span th:if="${professor.category == null}" th:text="#{common.notAvailable}">-</span>
+                <span th:if="${professor.category != null}" th:text="#{__${professor.category.messageKey}__}">Profesor Titular</span>
+            </td>
+            <td>
+                <span th:if="${professor.department == null}" th:text="#{common.notAvailable}">-</span>
+                <span th:if="${professor.department != null}" th:text="${#messages.msgOrNull(professor.department.name) != null ? #messages.msgOrNull(professor.department.name) : professor.department.name}">Departamento</span>
+            </td>
+            <td><a th:href="${'/professor/details/' + professor.id}" th:text="#{professor.action.details}">details</a></td>
+            <td><a th:href="${'/professor/edit/' + professor.id}" th:text="#{professor.action.edit}">edit</a></td>
+        </tr>
+        </tbody>
+    </table>
+    <div th:if="${#lists.isEmpty(professorsList)}" th:text="#{professor.list.empty}">No professors</div>
+</div>

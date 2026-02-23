@@ -1,0 +1,57 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head">
+    <title th:text="#{professor.details.page.title}">Professor details page</title>
+</head>
+<body>
+<nav th:replace="fragments/nav"></nav>
+
+<div class="container" id="main-container">
+    <h2 th:text="#{professor.details.title}">Professor details</h2>
+    <div th:if="${successKey}" class="alert alert-success" th:text="#{__${successKey}__}">Success</div>
+
+    <div class="card">
+        <div class="card-header" th:text="#{professor.form.dni}">DNI</div>
+        <div class="card-body">
+            <p class="card-text" th:text="${professor != null ? professor.dni : '-'}">11111111P</p>
+        </div>
+    </div>
+    <br>
+    <div class="card">
+        <div class="card-header" th:text="#{professor.form.name}">Name</div>
+        <div class="card-body">
+            <p class="card-text" th:text="${professor != null ? professor.name : '-'}">Ana</p>
+        </div>
+    </div>
+    <br>
+    <div class="card">
+        <div class="card-header" th:text="#{professor.form.lastName}">Last name</div>
+        <div class="card-body">
+            <p class="card-text" th:text="${professor != null ? professor.lastName : '-'}">López</p>
+        </div>
+    </div>
+    <br>
+    <div class="card">
+        <div class="card-header" th:text="#{professor.form.category}">Category</div>
+        <div class="card-body">
+            <p class="card-text">
+                <span th:if="${professor == null || professor.category == null}" th:text="#{common.notAvailable}">-</span>
+                <span th:if="${professor != null && professor.category != null}" th:text="#{__${professor.category.messageKey}__}">Profesor Titular</span>
+            </p>
+        </div>
+    </div>
+    <br>
+    <div class="card">
+        <div class="card-header" th:text="#{professor.form.department}">Department</div>
+        <div class="card-body">
+            <p class="card-text">
+                <span th:if="${professor == null || professor.department == null}" th:text="#{common.notAvailable}">-</span>
+                <span th:if="${professor != null && professor.department != null}" th:text="${#messages.msgOrNull(professor.department.name) != null ? #messages.msgOrNull(professor.department.name) : professor.department.name}">Departamento</span>
+            </p>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="fragments/footer"></footer>
+</body>
+</html>

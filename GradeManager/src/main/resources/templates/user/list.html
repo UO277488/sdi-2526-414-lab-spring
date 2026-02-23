@@ -1,38 +1,21 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
-<head th:replace="fragments/head"/>
+<head th:replace="fragments/head">
+    <title th:text="#{user.list.page.title}">Página de listado de usuarios</title>
+</head>
 <body>
 <!-- Barra de Navegación superior -->
 <nav th:replace="fragments/nav"/>
 <div class="container">
     <h2 th:text="#{user.list.title}">Usuarios</h2>
     <p th:text="#{user.list.subtitle}">Los usuarios que actualmente figuran en el sistema son los siguientes:</p>
-    <div class="table-responsive">
-        <table class="table table-hover">
-            <thead>
-            <tr>
-                <th scope="col" th:text="#{user.table.dni}">DNI</th>
-                <th scope="col" th:text="#{user.table.name}">Nombre</th>
-                <th scope="col" th:text="#{user.table.lastName}">Apellidos</th>
-                <th scope="col"></th>
-                <th scope="col"></th>
-                <th scope="col"></th>
-                <th scope="col"></th>
-                <th scope="col"></th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="user : ${usersList}">
-                <td th:text="${user.dni}">71888888X</td>
-                <td th:text="${user.name}">Nombre del alumno</td>
-                <td th:text="${user.lastName}">Apellidos del alumno</td>
-                <td><a th:href="${'/user/details/' + user.id}" th:text="#{user.action.details}">details</a></td>
-                <td><a th:href="${'/user/edit/' + user.id}" th:text="#{user.action.edit}">edit</a></td>
-                <td><a th:href="${'/user/delete/' + user.id}" th:text="#{user.action.delete}">delete</a></td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+    <button type="button" id="updateButton" class="btn btn-primary" th:text="#{button.update}">Actualizar</button>
+    <script>
+        $("#updateButton").click(function () {
+            $("#usersTable").load('/user/list/update');
+        });
+    </script>
+    <div id="usersTable" th:replace="~{fragments/usersTable :: usersTable}"></div>
 </div>
 <footer th:replace="fragments/footer"/>
 </body>

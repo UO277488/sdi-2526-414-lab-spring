@@ -1,40 +1,44 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
-<head th:replace="fragments/head"/>
+<head th:replace="fragments/head">
+    <title th:text="#{professor.edit.page.title}">Edit professor page</title>
+</head>
 <body>
-<nav th:replace="fragments/nav"/>
+<nav th:replace="fragments/nav"></nav>
 <div class="container">
-    <h2 th:text="#{professor.add.title}">Add professor</h2>
+    <h2 th:text="#{professor.edit.title}">Edit professor</h2>
     <div th:if="${errorKey}" class="alert alert-danger" th:text="#{__${errorKey}__}">Error</div>
-    <form class="form-horizontal" method="post" action="/professor/add">
+
+    <form class="form-horizontal" method="post" th:action="${'/professor/edit/' + professor.id}">
         <div class="form-group">
             <label class="control-label col-sm-2" for="dni" th:text="#{professor.form.dni} + ':'">DNI:</label>
             <div class="col-sm-10">
                 <input type="text" class="form-control" id="dni" name="dni"
-                       th:placeholder="#{professor.form.dni.placeholder}" required="true"/>
+                       th:value="${professor.dni}" th:placeholder="#{professor.form.dni.placeholder}" required/>
             </div>
         </div>
         <div class="form-group">
             <label class="control-label col-sm-2" for="name" th:text="#{professor.form.name} + ':'">Name:</label>
             <div class="col-sm-10">
                 <input type="text" class="form-control" id="name" name="name"
-                       th:placeholder="#{professor.form.name.placeholder}" required="true"/>
+                       th:value="${professor.name}" th:placeholder="#{professor.form.name.placeholder}" required/>
             </div>
         </div>
         <div class="form-group">
             <label class="control-label col-sm-2" for="lastName" th:text="#{professor.form.lastName} + ':'">Last name:</label>
             <div class="col-sm-10">
                 <input type="text" class="form-control" id="lastName" name="lastName"
-                       th:placeholder="#{professor.form.lastName.placeholder}" required="true"/>
+                       th:value="${professor.lastName}" th:placeholder="#{professor.form.lastName.placeholder}" required/>
             </div>
         </div>
         <div class="form-group">
             <label class="control-label col-sm-2" for="category" th:text="#{professor.form.category} + ':'">Category:</label>
             <div class="col-sm-10">
                 <select class="form-control" id="category" name="category" required>
-                    <option value="" disabled selected th:text="#{professor.form.category.placeholder}">Select category</option>
+                    <option value="" disabled th:selected="${professor.category == null}" th:text="#{professor.form.category.placeholder}">Select category</option>
                     <option th:each="category : ${categories}"
                             th:value="${category.name()}"
+                            th:selected="${professor.category != null && professor.category.name() == category.name()}"
                             th:text="#{__${category.messageKey}__}">Profesor Titular</option>
                 </select>
             </div>
@@ -43,16 +47,17 @@
             <label class="control-label col-sm-2" for="departmentId" th:text="#{professor.form.department} + ':'">Department:</label>
             <div class="col-sm-10">
                 <select class="form-control" id="departmentId" name="departmentId" required>
-                    <option value="" disabled selected th:text="#{professor.form.department.placeholder}">Select department</option>
+                    <option value="" disabled th:selected="${professor.department == null}" th:text="#{professor.form.department.placeholder}">Select department</option>
                     <option th:each="department : ${departmentsList}"
                             th:value="${department.id}"
+                            th:selected="${professor.department != null && professor.department.id == department.id}"
                             th:text="${#messages.msgOrNull(department.name) != null ? #messages.msgOrNull(department.name) : department.name}">Department name</option>
                 </select>
             </div>
         </div>
         <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-primary" th:text="#{button.submit}">Submit</button>
+                <button type="submit" class="btn btn-primary" th:text="#{button.modify}">Modify</button>
             </div>
         </div>
     </form>
