@@ -1,16 +1,12 @@
 package com.uniovi.sdi.grademanager.entities;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Table(name="user")
 public class User {
     @Id
     @GeneratedValue
@@ -21,6 +17,10 @@ public class User {
     private String name;
     private String lastName;
     private String role;
+
+    private String password;
+    @Transient //propiedad que no se almacena en la tabla.
+    private String passwordConfirm;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Mark> marks = new HashSet<>();
@@ -85,5 +85,18 @@ public class User {
     public void addMark(Mark mark) {
         marks.add(mark);
         mark.setUser(this);
+    }
+
+    public String getPassword() {
+        return password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    public String getPasswordConfirm() {
+        return passwordConfirm;
+    }
+    public void setPasswordConfirm(String passwordConfirm) {
+        this.passwordConfirm = passwordConfirm;
     }
 }

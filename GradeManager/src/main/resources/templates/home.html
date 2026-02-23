@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
+<head th:replace="fragments/head"></head>
+<body>
+<nav th:replace="fragments/nav"></nav>
+<div class="container" style="text-align: center">
+    <h2 th:text="#{welcome.message}">Welcome</h2>
+    <h3 th:text="#{home.private.zone}">This is a private area</h3>
+    <p><span th:text="#{home.auth.user}">Authenticated user:</span> <span th:text="${#authentication.name}"></span></p>
+    <p th:text="#{home.user.marks}">User marks</p>
+    <div class="table-responsive">
+        <table class="table table-hover" id="marksTable">
+            <thead>
+            <tr>
+                <th scope="col" th:text="#{mark.table.id}">id</th>
+                <th scope="col" th:text="#{mark.table.description}">Description</th>
+                <th scope="col" th:text="#{mark.table.score}">Score</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="mark : ${marksList}">
+                <td th:text="${mark.id}">1</td>
+                <td th:text="${mark.description}">Exercise</td>
+                <td th:text="${mark.score}">10</td>
+                <td><a th:href="${'/mark/details/' + mark.id}" th:text="#{mark.action.details}">details</a></td>
+                <td><a th:href="${'/mark/edit/' + mark.id}" th:text="#{mark.action.edit}">edit</a></td>
+                <td><a th:href="${'/mark/delete/' + mark.id}" th:text="#{mark.action.delete}">delete</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div th:if="${#lists.isEmpty(marksList)}" th:text="#{mark.list.empty}">No marks</div>
+</div>
+<footer th:replace="fragments/footer"></footer>
+</body>
+</html>

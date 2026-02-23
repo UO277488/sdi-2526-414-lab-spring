@@ -1,6 +1,0 @@
-This app executes on port 8080 since that is the default port for Spring Boot applications. You can access it by navigating to `http://localhost:8080` in your web browser after starting the application.
-In the pdf it says that the app could execute on port 8090 if 8080 is occupied
-by other process, but that is not the case. If you want to change the port to 8090, you can do so by adding the following line to your `application.properties` file:
-```server.port=8090
-```
-After making this change, restart the application and it will now execute on port 8090.

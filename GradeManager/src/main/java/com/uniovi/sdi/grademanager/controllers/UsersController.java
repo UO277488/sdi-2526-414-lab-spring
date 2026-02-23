@@ -1,15 +1,27 @@
 package com.uniovi.sdi.grademanager.controllers;
 import com.uniovi.sdi.grademanager.entities.User;
+import com.uniovi.sdi.grademanager.services.SecurityService;
 import com.uniovi.sdi.grademanager.services.UsersService;
+import com.uniovi.sdi.grademanager.validators.SignUpFormValidator;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Collections;
 @Controller
 public class UsersController {
     private final UsersService usersService;
+    private final SecurityService securityService;
+    private final SignUpFormValidator signUpFormValidator;
 
-    public UsersController(UsersService usersService) {
+    public UsersController(UsersService usersService, SecurityService securityService, SignUpFormValidator signUpFormValidator) {
         this.usersService = usersService;
+        this.securityService = securityService;
+        this.signUpFormValidator = signUpFormValidator;
     }
 
     @GetMapping("/user/list")
@@ -26,6 +38,7 @@ public class UsersController {
 
     @PostMapping(value = "/user/add")
     public String setUser(@ModelAttribute User user) {
+        user.setRole("ROLE_STUDENT");
         usersService.addUser(user);
         return "redirect:/user/list";
     }
@@ -51,8 +64,40 @@ public class UsersController {
 
     @PostMapping(value = "/user/edit/{id}")
     public String setEdit(@PathVariable Long id, @ModelAttribute User user) {
+        user.setId(id);
         usersService.addUser(user);
         return "redirect:/user/details/" + id;
     }
-}
 
+    @GetMapping("/signup")
+    public String signup(Model model) {
+        model.addAttribute("user", new User());
+        return "signup";
+    }
+
+    @PostMapping("/signup")
+    public String signup(@Validated User user, BindingResult result) {
+        signUpFormValidator.validate(user, result);
+        if (result.hasErrors()) {
+            return "signup";
+        }
+        user.setRole("ROLE_STUDENT");
+        usersService.addUser(user);
+        securityService.autoLogin(user.getDni(), user.getPasswordConfirm());
+        return "redirect:home";
+    }
+
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
+
+    @GetMapping("/home")
+    public String home(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String dni = auth.getName();
+        User activeUser = usersService.getUserByDni(dni);
+        model.addAttribute("marksList", activeUser != null ? activeUser.getMarks() : Collections.emptySet());
+        return "home";
+    }
+}
