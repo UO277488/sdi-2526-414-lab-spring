@@ -1,13 +1,23 @@
 package com.uniovi.sdi.grademanager.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 @Entity
 public class Mark {
     @Id
     @GeneratedValue
     private Long id;
+    @NotBlank(message = "{mark.validation.description.required}")
+    @Size(min = 290, message = "{mark.validation.description.minLength}")
     private String description;
+    @NotNull(message = "{mark.validation.score.required}")
+    @DecimalMin(value = "0.0", message = "{mark.validation.score.range}")
+    @DecimalMax(value = "10.0", message = "{mark.validation.score.range}")
     private Double score;
     @ManyToOne
     @JoinColumn(name = "user_id")

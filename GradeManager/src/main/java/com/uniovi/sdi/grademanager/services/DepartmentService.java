@@ -29,6 +29,29 @@ public class DepartmentService {
         return departmentRepository.save(department);
     }
 
+    public String validateDepartmentForCreate(Department department) {
+        if (department == null) {
+            return "department.validation.required";
+        }
+        if (!isTrimmedAndNotBlank(department.getName())) {
+            return "department.validation.name.trimmedNotBlank";
+        }
+        if (!isTrimmedAndNotBlank(department.getFaculty())) {
+            return "department.validation.faculty.trimmedNotBlank";
+        }
+        if (!isTrimmedAndNotBlank(department.getPhone())) {
+            return "department.validation.phone.trimmedNotBlank";
+        }
+        String code = department.getCode();
+        if (code == null || code.length() != 9 || !Character.isLetter(code.charAt(code.length() - 1))) {
+            return "department.validation.code.format";
+        }
+        if (departmentRepository.existsByCodeIgnoreCase(code)) {
+            return "department.validation.code.duplicate";
+        }
+        return null;
+    }
+
     public Department updateDepartment(Department department) {
         Department oldDepartment = findById(department.getId());
         if (oldDepartment == null) {
@@ -45,5 +68,9 @@ public class DepartmentService {
         }
         departmentRepository.deleteById(id);
         return department;
+    }
+
+    private boolean isTrimmedAndNotBlank(String value) {
+        return value != null && !value.isBlank() && value.equals(value.trim());
     }
 }

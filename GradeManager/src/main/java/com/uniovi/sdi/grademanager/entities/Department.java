@@ -13,11 +13,11 @@ public class Department {
     private String name;
     private String code;
     private String faculty;
-    private int phone;
+    private String phone;
     private int professors;
     public Department() {
     }
-    public Department(Long id, String name, String code, String faculty, int phone, int professors) {
+    public Department(Long id, String name, String code, String faculty, String phone, int professors) {
         this.id = id;
         this.name = name;
         this.code = code;
@@ -38,6 +38,9 @@ public class Department {
     public String getCode() {
         return code;
     }
+    public void setCode(String code) {
+        this.code = code;
+    }
     public String getFaculty() {
         return faculty;
     }
@@ -45,10 +48,10 @@ public class Department {
         this.faculty = faculty;
     }
 
-    public int getPhone() {
+    public String getPhone() {
         return phone;
     }
-    public void setPhone(int phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
     public int getProfessors() {

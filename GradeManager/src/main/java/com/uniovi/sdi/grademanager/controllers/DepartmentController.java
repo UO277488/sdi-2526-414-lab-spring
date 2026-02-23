@@ -2,20 +2,25 @@ package com.uniovi.sdi.grademanager.controllers;
 
 import com.uniovi.sdi.grademanager.entities.Department;
 import com.uniovi.sdi.grademanager.services.DepartmentService;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/department")
 public class DepartmentController {
 
     private final DepartmentService departmentService;
+    private final MessageSource messageSource;
 
-    public DepartmentController(DepartmentService departmentService) {
+    public DepartmentController(DepartmentService departmentService, MessageSource messageSource) {
         this.departmentService = departmentService;
+        this.messageSource = messageSource;
     }
 
     @GetMapping
@@ -42,7 +47,15 @@ public class DepartmentController {
     }
 
     @PostMapping
-    public ResponseEntity<Department> createDepartment(@RequestBody Department department) {
+    public ResponseEntity<?> createDepartment(@RequestBody Department department) {
+        String errorKey = departmentService.validateDepartmentForCreate(department);
+        if (errorKey != null) {
+            String errorMessage = messageSource.getMessage(errorKey, null, LocaleContextHolder.getLocale());
+            return ResponseEntity.badRequest().body(Map.of(
+                    "errorKey", errorKey,
+                    "error", errorMessage
+            ));
+        }
         Department created = departmentService.saveDepartment(department);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }

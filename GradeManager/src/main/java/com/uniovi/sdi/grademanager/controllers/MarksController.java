@@ -3,7 +3,9 @@ package com.uniovi.sdi.grademanager.controllers;
 import com.uniovi.sdi.grademanager.entities.Mark;
 import com.uniovi.sdi.grademanager.services.MarksService;
 import com.uniovi.sdi.grademanager.services.UsersService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,14 +21,24 @@ public class MarksController {
 
     @GetMapping(value = "/mark/add")
     public String getMark(Model model) {
+        model.addAttribute("mark", new Mark());
         model.addAttribute("usersList", usersService.getUsers());
         return "mark/add";
     }
 
     @PostMapping(value = "/mark/add")
-    public String setMark(@ModelAttribute Mark mark) {
-        if (mark.getUser() != null && mark.getUser().getId() != null) {
+    public String setMark(@Valid @ModelAttribute("mark") Mark mark, BindingResult result, Model model) {
+        if (mark.getUser() == null || mark.getUser().getId() == null) {
+            result.rejectValue("user", "mark.validation.user.required");
+        } else {
             mark.setUser(usersService.getUser(mark.getUser().getId()));
+            if (mark.getUser() == null) {
+                result.rejectValue("user", "mark.validation.user.required");
+            }
+        }
+        if (result.hasErrors()) {
+            model.addAttribute("usersList", usersService.getUsers());
+            return "mark/add";
         }
         marksService.addMark(mark);
         return "redirect:/mark/list";
