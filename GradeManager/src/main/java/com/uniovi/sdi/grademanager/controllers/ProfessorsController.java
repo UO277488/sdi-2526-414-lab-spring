@@ -1,43 +1,38 @@
 package com.uniovi.sdi.grademanager.controllers;
 
-import com.uniovi.sdi.grademanager.entities.Professor;
+import com.uniovi.sdi.grademanager.entities.ProfessorCategory;
+import com.uniovi.sdi.grademanager.services.DepartmentService;
 import com.uniovi.sdi.grademanager.services.ProfessorsService;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-@RestController
+@Controller
 @RequestMapping("/professor")
 public class ProfessorsController {
     private final ProfessorsService professorsService;
+    private final DepartmentService departmentService;
 
-    public ProfessorsController(ProfessorsService professorsService) {
+    public ProfessorsController(ProfessorsService professorsService, DepartmentService departmentService) {
         this.professorsService = professorsService;
+        this.departmentService = departmentService;
     }
 
     @GetMapping("/list")
-    public String getProfessorsList() {
-        List<Professor> professors = professorsService.getProfessors();
-        if (professors.isEmpty()) {
-            return "No hay profesores registrados.";
-        }
-        return professors.stream()
-                .map(professor -> "DNI: " + professor.getDni()
-                        + " | Nombre: " + professor.getName()
-                        + " | Apellidos: " + professor.getLastName()
-                        + " | Categoria: " + (professor.getCategory() == null ? "-" : professor.getCategory().getLabel())
-                        + " | Departamento: " + (professor.getDepartment() == null ? "-" : professor.getDepartment().getName()))
-                .collect(Collectors.joining("\n"));
+    public String getProfessorsList(Model model) {
+        model.addAttribute("professorsList", professorsService.getProfessors());
+        return "professor/list";
     }
 
     @GetMapping("/add")
-    public String getProfessor() {
-        return "Envie POST /professor/add con: dni, name, lastName, category y departmentId.";
+    public String getProfessor(Model model) {
+        model.addAttribute("categories", ProfessorCategory.values());
+        model.addAttribute("departmentsList", departmentService.findAll());
+        return "professor/add";
     }
 
     @PostMapping("/add")
@@ -45,7 +40,14 @@ public class ProfessorsController {
                                @RequestParam String name,
                                @RequestParam String lastName,
                                @RequestParam String category,
-                               @RequestParam Long departmentId) {
-        return professorsService.registerProfessor(dni, name, lastName, category, departmentId);
+                               @RequestParam Long departmentId,
+                               RedirectAttributes redirectAttributes) {
+        String messageKey = professorsService.registerProfessor(dni, name, lastName, category, departmentId);
+        if ("professor.api.register.ok".equals(messageKey)) {
+            redirectAttributes.addFlashAttribute("successKey", messageKey);
+            return "redirect:/professor/list";
+        }
+        redirectAttributes.addFlashAttribute("errorKey", messageKey);
+        return "redirect:/professor/add";
     }
 }

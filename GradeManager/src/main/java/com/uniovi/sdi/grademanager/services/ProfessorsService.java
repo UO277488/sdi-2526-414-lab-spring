@@ -32,21 +32,21 @@ public class ProfessorsService {
 
     public String registerProfessor(String dni, String name, String lastName, String categoryValue, Long departmentId) {
         if (dni == null || dni.isBlank() || name == null || name.isBlank() || lastName == null || lastName.isBlank()) {
-            return "Error: DNI, nombre y apellidos son obligatorios.";
+            return "professor.api.register.error.required";
         }
 
         if (professorsRepository.findByDni(dni) != null) {
-            return "Error: ya existe un profesor con ese DNI.";
+            return "professor.api.register.error.duplicateDni";
         }
 
         ProfessorCategory category = ProfessorCategory.fromValue(categoryValue);
         if (category == null) {
-            return "Error: categoría no válida. Use: Profesor Titular, Catedrático, Profesor Ayudante, Profesor Asociado.";
+            return "professor.api.register.error.invalidCategory";
         }
 
         Department department = departmentRepository.findById(departmentId).orElse(null);
         if (department == null) {
-            return "Error: el departamento indicado no existe.";
+            return "professor.api.register.error.departmentNotFound";
         }
 
         Professor professor = new Professor();
@@ -57,6 +57,6 @@ public class ProfessorsService {
         professor.setDepartment(department);
         addProfessor(professor);
 
-        return "Profesor registrado correctamente.";
+        return "professor.api.register.ok";
     }
 }

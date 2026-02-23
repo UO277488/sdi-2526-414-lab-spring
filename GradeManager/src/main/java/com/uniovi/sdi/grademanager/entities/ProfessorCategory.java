@@ -1,19 +1,25 @@
 package com.uniovi.sdi.grademanager.entities;
 
 public enum ProfessorCategory {
-    PROFESOR_TITULAR("Profesor Titular"),
-    CATEDRATICO("Catedrático"),
-    PROFESOR_AYUDANTE("Profesor Ayudante"),
-    PROFESOR_ASOCIADO("Profesor Asociado");
+    PROFESOR_TITULAR("Profesor Titular", "professor.category.PROFESOR_TITULAR"),
+    CATEDRATICO("Catedrático", "professor.category.CATEDRATICO"),
+    PROFESOR_AYUDANTE("Profesor Ayudante", "professor.category.PROFESOR_AYUDANTE"),
+    PROFESOR_ASOCIADO("Profesor Asociado", "professor.category.PROFESOR_ASOCIADO");
 
     private final String label;
+    private final String messageKey;
 
-    ProfessorCategory(String label) {
+    ProfessorCategory(String label, String messageKey) {
         this.label = label;
+        this.messageKey = messageKey;
     }
 
     public String getLabel() {
         return label;
+    }
+
+    public String getMessageKey() {
+        return messageKey;
     }
 
     public static ProfessorCategory fromValue(String value) {

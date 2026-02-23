@@ -9,6 +9,7 @@
 <div class="container" id="main-container">
     <h2 th:text="#{professor.list.title}">Professors</h2>
     <p th:text="#{professor.list.subtitle}">The professors currently in the system are the following:</p>
+    <div th:if="${successKey}" class="alert alert-success" th:text="#{__${successKey}__}">Success</div>
 
     <div class="table-responsive">
         <table class="table table-hover">
@@ -17,6 +18,8 @@
                 <th scope="col" th:text="#{professor.table.dni}">DNI</th>
                 <th scope="col" th:text="#{professor.table.name}">Name</th>
                 <th scope="col" th:text="#{professor.table.lastName}">Last name</th>
+                <th scope="col" th:text="#{professor.table.category}">Category</th>
+                <th scope="col" th:text="#{professor.table.department}">Department</th>
             </tr>
             </thead>
             <tbody>
@@ -24,6 +27,14 @@
                 <td th:text="${professor.dni}">11111111P</td>
                 <td th:text="${professor.name}">Ana</td>
                 <td th:text="${professor.lastName}">López</td>
+                <td>
+                    <span th:if="${professor.category == null}" th:text="#{common.notAvailable}">-</span>
+                    <span th:if="${professor.category != null}" th:text="#{__${professor.category.messageKey}__}">Profesor Titular</span>
+                </td>
+                <td>
+                    <span th:if="${professor.department == null}" th:text="#{common.notAvailable}">-</span>
+                    <span th:if="${professor.department != null}" th:text="${professor.department.name}">Departamento</span>
+                </td>
             </tr>
             </tbody>
         </table>
