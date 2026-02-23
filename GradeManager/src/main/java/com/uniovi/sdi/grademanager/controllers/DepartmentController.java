@@ -63,7 +63,10 @@ public class DepartmentController {
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<Department> updateDepartment(@PathVariable Long id, @RequestBody Department department) {
+    public ResponseEntity<?> updateDepartment(@PathVariable Long id, @RequestBody Department department) {
+        if (departmentService.findById(id) == null) {
+            return ResponseEntity.notFound().build();
+        }
         Department departmentToUpdate = new Department(
                 id,
                 department.getName(),
@@ -72,10 +75,15 @@ public class DepartmentController {
                 department.getPhone(),
                 department.getProfessors()
         );
-        Department updated = departmentService.updateDepartment(departmentToUpdate);
-        if (updated == null) {
-            return ResponseEntity.notFound().build();
+        String errorKey = departmentService.validateDepartmentForUpdate(departmentToUpdate);
+        if (errorKey != null) {
+            String errorMessage = messageSource.getMessage(errorKey, null, LocaleContextHolder.getLocale());
+            return ResponseEntity.badRequest().body(Map.of(
+                    "errorKey", errorKey,
+                    "error", errorMessage
+            ));
         }
+        Department updated = departmentService.updateDepartment(departmentToUpdate);
         return ResponseEntity.ok(updated);
     }
 

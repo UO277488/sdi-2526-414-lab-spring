@@ -70,10 +70,16 @@ public class MarksController {
     }
 
     @PostMapping(value="/mark/edit/{id}")
-    public String setEdit(@ModelAttribute Mark mark, @PathVariable Long id){
+    public String setEdit(@Valid @ModelAttribute("mark") Mark mark, BindingResult result, @PathVariable Long id, Model model){
         Mark originalMark = marksService.getMark(id);
         if (originalMark == null) {
             return "redirect:/mark/list";
+        }
+        if (result.hasErrors()) {
+            mark.setId(id);
+            mark.setUser(originalMark.getUser());
+            model.addAttribute("usersList", usersService.getUsers());
+            return "mark/edit";
         }
         originalMark.setScore(mark.getScore());
         originalMark.setDescription(mark.getDescription());

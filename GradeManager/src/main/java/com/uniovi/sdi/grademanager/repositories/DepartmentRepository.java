@@ -5,4 +5,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface DepartmentRepository extends CrudRepository<Department, Long> {
     boolean existsByCodeIgnoreCase(String code);
+    boolean existsByCodeIgnoreCaseAndIdNot(String code, Long id);
 }

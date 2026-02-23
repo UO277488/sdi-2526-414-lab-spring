@@ -30,6 +30,17 @@ public class DepartmentService {
     }
 
     public String validateDepartmentForCreate(Department department) {
+        return validateDepartment(department, null);
+    }
+
+    public String validateDepartmentForUpdate(Department department) {
+        if (department == null || department.getId() == null) {
+            return "department.validation.required";
+        }
+        return validateDepartment(department, department.getId());
+    }
+
+    private String validateDepartment(Department department, Long departmentIdToExclude) {
         if (department == null) {
             return "department.validation.required";
         }
@@ -46,7 +57,10 @@ public class DepartmentService {
         if (code == null || code.length() != 9 || !Character.isLetter(code.charAt(code.length() - 1))) {
             return "department.validation.code.format";
         }
-        if (departmentRepository.existsByCodeIgnoreCase(code)) {
+        boolean codeExists = departmentIdToExclude == null
+                ? departmentRepository.existsByCodeIgnoreCase(code)
+                : departmentRepository.existsByCodeIgnoreCaseAndIdNot(code, departmentIdToExclude);
+        if (codeExists) {
             return "department.validation.code.duplicate";
         }
         return null;
@@ -58,7 +72,11 @@ public class DepartmentService {
             return null;
         }
         oldDepartment.setName(department.getName());
-        return departmentRepository.save(department);
+        oldDepartment.setCode(department.getCode());
+        oldDepartment.setFaculty(department.getFaculty());
+        oldDepartment.setPhone(department.getPhone());
+        oldDepartment.setProfessors(department.getProfessors());
+        return departmentRepository.save(oldDepartment);
     }
 
     public Department deleteDepartment(Long id) {
