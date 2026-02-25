@@ -4,9 +4,7 @@
 :: Usage: stop.bat [shutdown options]
 
 cd /d "%~dp0"
-cd ..\data
+cd ..\..\data
 
-REM the Server class understands --shutdown which connects to a running
-REM server and issues the shutdown command. additional options such as
-REM --database.0 may be specified if needed.
-java -classpath ..\lib\hsqldb.jar org.hsqldb.server.Server --shutdown %*
+REM use SqlTool to connect to the server and issue SHUTDOWN command
+java -jar ..\lib\sqltool.jar --inlineRc=url=jdbc:hsqldb:hsql://localhost,user=SA,password= --sql="SHUTDOWN;" %*
