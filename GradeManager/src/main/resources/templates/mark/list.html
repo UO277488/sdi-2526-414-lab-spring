@@ -14,17 +14,46 @@
     <form class="form-inline" action="/mark/list" method="get">
         <div class="form-group">
             <input name="searchText" type="text" class="form-control" size="50"
-                   placeholder="Buscar por descripcion, nombre o DNI del alumno">
+                   placeholder="Buscar por descripcion, nombre o DNI del alumno"
+                   th:value="${param.searchText != null and !#lists.isEmpty(param.searchText) ? param.searchText[0] : ''}">
         </div>
+        <input th:if="${param.size != null and !#lists.isEmpty(param.size)}" type="hidden" name="size" th:value="${param.size[0]}">
         <button type="submit" class="btn btn-primary">Buscar</button>
     </form>
     <br>
     <p th:text="#{mark.list.subtitle}">Las notas que actualmente figuran en el sistema son las siguientes:</p>
     <button type="button" id="updateButton" class="btn btn-primary" th:text="#{button.update}">Actualizar</button>
-    <script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        function buildMarksUpdateUrl() {
+            let page = /*[[${param.page != null and !#lists.isEmpty(param.page) ? param.page[0] : null}]]*/ null;
+            let size = /*[[${param.size != null and !#lists.isEmpty(param.size) ? param.size[0] : null}]]*/ null;
+            let searchText = /*[[${param.searchText != null and !#lists.isEmpty(param.searchText) ? param.searchText[0] : null}]]*/ null;
+            let params = [];
+            if (page != null) {
+                params.push("page=" + page);
+            }
+            if (size != null) {
+                params.push("size=" + size);
+            }
+            if (searchText != null && searchText !== "") {
+                params.push("searchText=" + encodeURIComponent(searchText));
+            }
+            let urlUpdate = "/mark/list/update";
+            if (params.length > 0) {
+                urlUpdate += "?" + params.join("&");
+            }
+            return urlUpdate;
+        }
+
+        function reloadMarksTable() {
+            $("#marksTable").load(buildMarksUpdateUrl());
+        }
+
         $("#updateButton").click(function () {
-            $("#marksTable").load('/mark/list/update');
+            reloadMarksTable();
         });
+        /*]]>*/
     </script>
     <div class="table-responsive">
         <table class="table table-hover" th:fragment="marksTable" id="marksTable">
@@ -57,7 +86,7 @@
                                 /*<![CDATA[*/
                                 $("#noresendButton" + "[[${mark.id}]]").click(function () {
                                     $.get("/mark/[[${mark.id}]]/noresend", function () {
-                                        $("#marksTable").load('/mark/list/update');
+                                        reloadMarksTable();
                                     });
                                 });
                                 /*]]>*/
@@ -69,7 +98,7 @@
                                 /*<![CDATA[*/
                                 $("#resendButton" + "[[${mark.id}]]").click(function () {
                                     $.get("/mark/[[${mark.id}]]/resend", function () {
-                                        $("#marksTable").load('/mark/list/update');
+                                        reloadMarksTable();
                                     });
                                 });
                                 /*]]>*/
@@ -88,6 +117,7 @@
         </table>
     </div>
     <div th:if="${#lists.isEmpty(marksList)}" th:text="#{mark.list.empty}">No hay notas</div>
+    <div th:replace="~{fragments/pagination :: pagination}"></div>
 </div>
 
 <footer th:replace="fragments/footer"></footer>

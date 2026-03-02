@@ -3,11 +3,15 @@ package com.uniovi.sdi.grademanager.services;
 import com.uniovi.sdi.grademanager.entities.Mark;
 import com.uniovi.sdi.grademanager.entities.User;
 import com.uniovi.sdi.grademanager.repositories.MarksRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -22,6 +26,10 @@ public class MarksService {
         List<Mark> marks = new ArrayList<>();
         marksRepository.findAll().forEach(marks::add);
         return marks;
+    }
+
+    public Page<Mark> getMarks(Pageable pageable) {
+        return marksRepository.findAll(pageable);
     }
 
     public Mark getMark(Long id) {
@@ -47,30 +55,32 @@ public class MarksService {
         }
     }
 
-    public List<Mark> getMarksForUser(User user) {
+    public Page<Mark> getMarksForUser(Pageable pageable, User user) {
+        Page<Mark> marks = new PageImpl<>(new LinkedList<>());
         if (user == null || user.getRole() == null) {
-            return new ArrayList<>();
+            return marks;
         }
         if ("ROLE_STUDENT".equals(user.getRole())) {
-            return marksRepository.findAllByUser(user);
+            marks = marksRepository.findAllByUser(pageable, user);
         }
         if ("ROLE_PROFESSOR".equals(user.getRole()) || "ROLE_ADMIN".equals(user.getRole())) {
-            return getMarks();
+            marks = getMarks(pageable);
         }
-        return new ArrayList<>();
+        return marks;
     }
 
-    public List<Mark> searchMarksByDescriptionAndNameForUser(String searchText, User user) {
+    public Page<Mark> searchMarksByDescriptionAndNameForUser(Pageable pageable, String searchText, User user) {
+        Page<Mark> marks = new PageImpl<>(new LinkedList<>());
         if (user == null || user.getRole() == null) {
-            return new ArrayList<>();
+            return marks;
         }
         String normalizedSearchText = "%" + searchText + "%";
         if ("ROLE_STUDENT".equals(user.getRole())) {
-            return marksRepository.searchByDescriptionNameAndUser(normalizedSearchText, user);
+            marks = marksRepository.searchByDescriptionNameAndUser(pageable, normalizedSearchText, user);
         }
         if ("ROLE_PROFESSOR".equals(user.getRole()) || "ROLE_ADMIN".equals(user.getRole())) {
-            return marksRepository.searchByDescriptionAndName(normalizedSearchText);
+            marks = marksRepository.searchByDescriptionAndName(pageable, normalizedSearchText);
         }
-        return new ArrayList<>();
+        return marks;
     }
 }
