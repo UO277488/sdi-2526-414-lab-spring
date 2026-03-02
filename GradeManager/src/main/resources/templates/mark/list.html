@@ -1,5 +1,7 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head th:replace="fragments/head">
     <title th:text="#{mark.list.page.title}">Página de listado de notas</title>
 </head>
@@ -36,8 +38,43 @@
                 <td th:text="${mark.description}"> Ejercicio 1</td>
                 <td th:text="${mark.score}">10</td>
                 <td><a th:href="${'/mark/details/' + mark.id}" th:text="#{mark.action.details}">detalles</a></td>
-                <td><a th:href="${'/mark/edit/' + mark.id}" th:text="#{mark.action.edit}">modificar</a></td>
-                <td><a th:href="${'/mark/delete/' + mark.id}" th:text="#{mark.action.delete}" th:onclick="|return confirm('#{dialog.delete.confirm}');|">eliminar</a></td>
+                <td>
+                    <a sec:authorize="hasAuthority('ROLE_PROFESSOR')"
+                       th:href="${'/mark/edit/' + mark.id}"
+                       th:text="#{mark.action.edit}">modificar</a>
+                    <div sec:authorize="hasAuthority('ROLE_STUDENT')">
+                        <div th:if="${mark.resend}">
+                            <button type="button" th:id="${'noresendButton' + mark.id}" class="btn btn-info">No reenviar</button>
+                            <script th:inline="javascript">
+                                /*<![CDATA[*/
+                                $("#noresendButton" + "[[${mark.id}]]").click(function () {
+                                    $.get("/mark/[[${mark.id}]]/noresend", function () {
+                                        $("#marksTable").load('/mark/list/update');
+                                    });
+                                });
+                                /*]]>*/
+                            </script>
+                        </div>
+                        <div th:unless="${mark.resend}">
+                            <button type="button" th:id="${'resendButton' + mark.id}" class="btn btn-success">Reenviar</button>
+                            <script th:inline="javascript">
+                                /*<![CDATA[*/
+                                $("#resendButton" + "[[${mark.id}]]").click(function () {
+                                    $.get("/mark/[[${mark.id}]]/resend", function () {
+                                        $("#marksTable").load('/mark/list/update');
+                                    });
+                                });
+                                /*]]>*/
+                            </script>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <a sec:authorize="hasAuthority('ROLE_PROFESSOR')"
+                       th:href="${'/mark/delete/' + mark.id}"
+                       th:text="#{mark.action.delete}"
+                       th:onclick="|return confirm('#{dialog.delete.confirm}');|">eliminar</a>
+                </td>
             </tr>
             </tbody>
         </table>

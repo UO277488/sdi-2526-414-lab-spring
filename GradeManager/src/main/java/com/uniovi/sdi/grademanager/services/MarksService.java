@@ -2,6 +2,8 @@ package com.uniovi.sdi.grademanager.services;
 
 import com.uniovi.sdi.grademanager.entities.Mark;
 import com.uniovi.sdi.grademanager.repositories.MarksRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -32,5 +34,15 @@ public class MarksService {
 
     public void deleteMark(Long id) {
         marksRepository.deleteById(id);
+    }
+
+    public void setMarkResend(boolean resend, Long id) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String dni = auth.getName();
+
+        Mark mark = marksRepository.findById(id).orElse(null);
+        if (mark != null && mark.getUser() != null && dni.equals(mark.getUser().getDni())) {
+            marksRepository.updateResend(resend, id);
+        }
     }
 }

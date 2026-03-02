@@ -21,6 +21,7 @@ public class Mark {
     @DecimalMin(value = "0.0", message = "{mark.validation.score.range}")
     @DecimalMax(value = "10.0", message = "{mark.validation.score.range}")
     private Double score;
+    private Boolean resend = false;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -79,6 +80,14 @@ public class Mark {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Boolean getResend() {
+        return resend;
+    }
+
+    public void setResend(Boolean resend) {
+        this.resend = resend;
     }
 
     @Override

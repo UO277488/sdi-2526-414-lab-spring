@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head th:replace="fragments/head"></head>
 <body>
 <nav th:replace="fragments/nav"></nav>
@@ -26,8 +28,8 @@
                 <td th:text="${mark.description}">Exercise</td>
                 <td th:text="${mark.score}">10</td>
                 <td><a th:href="${'/mark/details/' + mark.id}" th:text="#{mark.action.details}">details</a></td>
-                <td><a th:href="${'/mark/edit/' + mark.id}" th:text="#{mark.action.edit}">edit</a></td>
-                <td><a th:href="${'/mark/delete/' + mark.id}" th:text="#{mark.action.delete}">delete</a></td>
+                <td><a sec:authorize="hasAuthority('ROLE_PROFESSOR')" th:href="${'/mark/edit/' + mark.id}" th:text="#{mark.action.edit}">edit</a></td>
+                <td><a sec:authorize="hasAuthority('ROLE_PROFESSOR')" th:href="${'/mark/delete/' + mark.id}" th:text="#{mark.action.delete}">delete</a></td>
             </tr>
             </tbody>
         </table>
