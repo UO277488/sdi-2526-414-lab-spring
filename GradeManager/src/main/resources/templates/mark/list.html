@@ -7,8 +7,6 @@
 </head>
 <body>
 <nav th:replace="fragments/nav"></nav>
-
-
 <div class="container" id="main-container">
     <h2 th:text="#{mark.list.title}">Notas</h2>
     <form class="form-inline" action="/mark/list" method="get">
@@ -36,7 +34,7 @@
             if (size != null) {
                 params.push("size=" + size);
             }
-            if (searchText != null && searchText !== "") {
+            if (searchText != null && searchText != "") {
                 params.push("searchText=" + encodeURIComponent(searchText));
             }
             let urlUpdate = "/mark/list/update";
@@ -45,11 +43,9 @@
             }
             return urlUpdate;
         }
-
         function reloadMarksTable() {
             $("#marksTable").load(buildMarksUpdateUrl());
         }
-
         $("#updateButton").click(function () {
             reloadMarksTable();
         });
@@ -119,7 +115,6 @@
     <div th:if="${#lists.isEmpty(marksList)}" th:text="#{mark.list.empty}">No hay notas</div>
     <div th:replace="~{fragments/pagination :: pagination}"></div>
 </div>
-
 <footer th:replace="fragments/footer"></footer>
 </body>
 </html>
