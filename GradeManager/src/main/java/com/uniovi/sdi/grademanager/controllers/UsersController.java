@@ -1,5 +1,6 @@
 package com.uniovi.sdi.grademanager.controllers;
 import com.uniovi.sdi.grademanager.entities.User;
+import com.uniovi.sdi.grademanager.services.RolesService;
 import com.uniovi.sdi.grademanager.services.SecurityService;
 import com.uniovi.sdi.grademanager.services.UsersService;
 import com.uniovi.sdi.grademanager.validators.SignUpFormValidator;
@@ -17,11 +18,13 @@ public class UsersController {
     private final UsersService usersService;
     private final SecurityService securityService;
     private final SignUpFormValidator signUpFormValidator;
+    private final RolesService rolesService;
 
-    public UsersController(UsersService usersService, SecurityService securityService, SignUpFormValidator signUpFormValidator) {
+    public UsersController(UsersService usersService, SecurityService securityService, SignUpFormValidator signUpFormValidator, RolesService rolesService) {
         this.usersService = usersService;
         this.securityService = securityService;
         this.signUpFormValidator = signUpFormValidator;
+        this.rolesService = rolesService;
     }
 
     @GetMapping("/user/list")
@@ -32,13 +35,16 @@ public class UsersController {
 
     @GetMapping(value = "/user/add")
     public String getUser(Model model) {
+        model.addAttribute("rolesList", rolesService.getRoles());
         model.addAttribute("usersList", usersService.getUsers());
         return "user/add";
     }
 
     @PostMapping(value = "/user/add")
     public String setUser(@ModelAttribute User user) {
-        user.setRole("ROLE_STUDENT");
+        if (user.getRole() == null || user.getRole().isBlank()) {
+            user.setRole(rolesService.getRoles()[0]);
+        }
         usersService.addUser(user);
         return "redirect:/user/list";
     }
@@ -86,7 +92,7 @@ public class UsersController {
         if (result.hasErrors()) {
             return "signup";
         }
-        user.setRole("ROLE_STUDENT");
+        user.setRole(rolesService.getRoles()[0]);
         usersService.addUser(user);
         securityService.autoLogin(user.getDni(), user.getPasswordConfirm());
         return "redirect:home";

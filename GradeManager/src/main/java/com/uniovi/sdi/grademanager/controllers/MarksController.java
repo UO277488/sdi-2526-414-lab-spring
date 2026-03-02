@@ -3,26 +3,20 @@ package com.uniovi.sdi.grademanager.controllers;
 import com.uniovi.sdi.grademanager.entities.Mark;
 import com.uniovi.sdi.grademanager.services.MarksService;
 import com.uniovi.sdi.grademanager.services.UsersService;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @Controller
 public class MarksController {
     private final MarksService marksService;
     private final UsersService usersService;
-    private final HttpSession httpSession;
 
-    public MarksController(MarksService marksService, UsersService usersService, HttpSession httpSession){
+    public MarksController(MarksService marksService, UsersService usersService){
         this.marksService = marksService;
         this.usersService = usersService;
-        this.httpSession = httpSession;
     }
 
     @GetMapping(value = "/mark/add")
@@ -52,9 +46,6 @@ public class MarksController {
 
     @GetMapping("/mark/list")
     public String getList(Model model) {
-        Set<Mark> consultedList = (Set<Mark>) (httpSession.getAttribute("consultedList") != null ?
-                httpSession.getAttribute("consultedList") : new HashSet<>());
-        model.addAttribute("consultedList", consultedList);
         model.addAttribute("marksList", marksService.getMarks());
         return "mark/list";
     }

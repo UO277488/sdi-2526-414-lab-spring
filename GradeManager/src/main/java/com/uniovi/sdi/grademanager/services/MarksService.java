@@ -2,22 +2,17 @@ package com.uniovi.sdi.grademanager.services;
 
 import com.uniovi.sdi.grademanager.entities.Mark;
 import com.uniovi.sdi.grademanager.repositories.MarksRepository;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class MarksService {
     private final MarksRepository marksRepository;
-    private final HttpSession httpSession;
 
-    public MarksService(MarksRepository marksRepository, HttpSession httpSession) {
+    public MarksService(MarksRepository marksRepository) {
         this.marksRepository = marksRepository;
-        this.httpSession = httpSession;
     }
 
     public List<Mark> getMarks() {
@@ -25,21 +20,16 @@ public class MarksService {
         marksRepository.findAll().forEach(marks::add);
         return marks;
     }
+
     public Mark getMark(Long id) {
-        Set<Mark> consultedList = (Set<Mark>) httpSession.getAttribute("consultedList");
-        if (consultedList == null) {
-            consultedList = new HashSet<>();
-        }
-        Mark mark = marksRepository.findById(id).isPresent() ? marksRepository.findById(id).get() : new
-                Mark();
-        consultedList.add(mark);
-        httpSession.setAttribute("consultedList", consultedList);
-        return mark;
+        return marksRepository.findById(id).orElse(new Mark());
     }
+
     public void addMark(Mark mark) {
         // Si en Id es null le asignamos el ultimo + 1 de la lista
         marksRepository.save(mark);
     }
+
     public void deleteMark(Long id) {
         marksRepository.deleteById(id);
     }
