@@ -1,6 +1,7 @@
 package com.uniovi.sdi.grademanager.controllers;
 
 import com.uniovi.sdi.grademanager.entities.Mark;
+import com.uniovi.sdi.grademanager.entities.User;
 import com.uniovi.sdi.grademanager.services.MarksService;
 import com.uniovi.sdi.grademanager.services.UsersService;
 import jakarta.validation.Valid;
@@ -8,6 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 @Controller
 public class MarksController {
@@ -45,8 +48,10 @@ public class MarksController {
     }
 
     @GetMapping("/mark/list")
-    public String getList(Model model) {
-        model.addAttribute("marksList", marksService.getMarks());
+    public String getList(Model model, Principal principal) {
+        String dni = principal.getName();
+        User user = usersService.getUserByDni(dni);
+        model.addAttribute("marksList", marksService.getMarksForUser(user));
         return "mark/list";
     }
 
@@ -88,8 +93,10 @@ public class MarksController {
     }
 
     @GetMapping("/mark/list/update")
-    public String updateList(Model model){
-        model.addAttribute("marksList", marksService.getMarks() );
+    public String updateList(Model model, Principal principal){
+        String dni = principal.getName();
+        User user = usersService.getUserByDni(dni);
+        model.addAttribute("marksList", marksService.getMarksForUser(user));
         return "mark/list :: marksTable";
     }
 
