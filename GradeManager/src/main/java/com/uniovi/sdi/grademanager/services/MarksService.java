@@ -59,4 +59,18 @@ public class MarksService {
         }
         return new ArrayList<>();
     }
+
+    public List<Mark> searchMarksByDescriptionAndNameForUser(String searchText, User user) {
+        if (user == null || user.getRole() == null) {
+            return new ArrayList<>();
+        }
+        String normalizedSearchText = "%" + searchText + "%";
+        if ("ROLE_STUDENT".equals(user.getRole())) {
+            return marksRepository.searchByDescriptionNameAndUser(normalizedSearchText, user);
+        }
+        if ("ROLE_PROFESSOR".equals(user.getRole()) || "ROLE_ADMIN".equals(user.getRole())) {
+            return marksRepository.searchByDescriptionAndName(normalizedSearchText);
+        }
+        return new ArrayList<>();
+    }
 }

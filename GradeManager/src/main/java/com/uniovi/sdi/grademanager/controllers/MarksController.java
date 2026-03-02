@@ -48,10 +48,15 @@ public class MarksController {
     }
 
     @GetMapping("/mark/list")
-    public String getList(Model model, Principal principal) {
+    public String getList(Model model, Principal principal,
+                          @RequestParam(value = "searchText", required = false) String searchText) {
         String dni = principal.getName();
         User user = usersService.getUserByDni(dni);
-        model.addAttribute("marksList", marksService.getMarksForUser(user));
+        if (searchText != null && !searchText.isBlank()) {
+            model.addAttribute("marksList", marksService.searchMarksByDescriptionAndNameForUser(searchText, user));
+        } else {
+            model.addAttribute("marksList", marksService.getMarksForUser(user));
+        }
         return "mark/list";
     }
 
