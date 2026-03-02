@@ -9,12 +9,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 @Service
+@Transactional
 public class MarksService {
     private final MarksRepository marksRepository;
 
@@ -61,7 +63,7 @@ public class MarksService {
             return marks;
         }
         if ("ROLE_STUDENT".equals(user.getRole())) {
-            marks = marksRepository.findAllByUser(pageable, user);
+            marks = marksRepository.findAllByUserOrderByIdAsc(pageable, user);
         }
         if ("ROLE_PROFESSOR".equals(user.getRole()) || "ROLE_ADMIN".equals(user.getRole())) {
             marks = getMarks(pageable);
@@ -74,12 +76,11 @@ public class MarksService {
         if (user == null || user.getRole() == null) {
             return marks;
         }
-        String normalizedSearchText = "%" + searchText + "%";
         if ("ROLE_STUDENT".equals(user.getRole())) {
-            marks = marksRepository.searchByDescriptionNameAndUser(pageable, normalizedSearchText, user);
+            marks = marksRepository.searchByUser(pageable, user, searchText);
         }
         if ("ROLE_PROFESSOR".equals(user.getRole()) || "ROLE_ADMIN".equals(user.getRole())) {
-            marks = marksRepository.searchByDescriptionAndName(pageable, normalizedSearchText);
+            marks = marksRepository.searchByDescriptionNameAndDni(pageable, searchText);
         }
         return marks;
     }
