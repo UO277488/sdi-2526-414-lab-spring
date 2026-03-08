@@ -1,5 +1,7 @@
 package com.uniovi.sdi.grademanager;
 
+import com.uniovi.sdi.grademanager.pageobjects.PO_HomeView;
+import com.uniovi.sdi.grademanager.pageobjects.PO_Properties;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -10,8 +12,11 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.List;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -50,60 +55,71 @@ class GradeManagerApplicationTests {
 
     @Test
     @Order(1)
-    void PR01() {
-        Assertions.assertNotNull(driver);
+    void PR01A() {
+        PO_HomeView.checkWelcomeToPage(driver, PO_Properties.getSPANISH());
     }
 
     @Test
     @Order(2)
-    void PR02() {
-        Assertions.assertTrue(driver.getCurrentUrl().contains("localhost"));
+    void PR01B() {
+        List<WebElement> welcomeMessageElement = PO_HomeView.getWelcomeMessageText(driver, PO_Properties.getSPANISH());
+        Assertions.assertEquals(
+                welcomeMessageElement.getFirst().getText(),
+                PO_HomeView.getP().getString("welcome.message", PO_Properties.getSPANISH())
+        );
     }
 
     @Test
     @Order(3)
-    void PR03() {
-        Assertions.assertEquals(URL, driver.getCurrentUrl());
+    public void PR02() {
+        PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
     }
 
     @Test
     @Order(4)
-    void PR04() {
-        Assertions.assertNotNull(driver.getTitle());
+    public void PR03() {
+        PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
     }
 
     @Test
     @Order(5)
+    public void PR04() {
+        PO_HomeView.checkChangeLanguage(driver, "btnSpanish", "btnEnglish",
+                PO_Properties.getSPANISH(), PO_Properties.getENGLISH());
+    }
+
+    @Test
+    @Order(6)
     void PR05() {
         Assertions.assertNotNull(driver.getPageSource());
     }
 
     @Test
-    @Order(6)
+    @Order(7)
     void PR06() {
         Assertions.assertFalse(driver.getWindowHandle().isBlank());
     }
 
     @Test
-    @Order(7)
+    @Order(8)
     void PR07() {
         Assertions.assertTrue(driver.getWindowHandles().size() >= 1);
     }
 
     @Test
-    @Order(8)
+    @Order(9)
     void PR08() {
         Assertions.assertNotNull(driver.manage());
     }
 
     @Test
-    @Order(9)
+    @Order(10)
     void PR09() {
         Assertions.assertNotNull(driver.navigate());
     }
 
     @Test
-    @Order(10)
+    @Order(11)
     void PR10() {
         Assertions.assertNotNull(driver.getCurrentUrl());
     }

@@ -4,7 +4,10 @@ import com.uniovi.sdi.grademanager.util.SeleniumUtils;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
 import java.util.List;
 
 public class PO_NavView extends PO_View {
@@ -47,6 +50,13 @@ public class PO_NavView extends PO_View {
         List<WebElement> selectedLanguage = SeleniumUtils.waitLoadElementsBy(driver, "id", textLanguage, getTimeout());
         Assertions.assertFalse(selectedLanguage.isEmpty(), "No se encontró el idioma: " + textLanguage);
         selectedLanguage.getFirst().click();
+
+        // Espera explícita a navegación/actualización para evitar carreras tras el click.
+        new WebDriverWait(driver, Duration.ofSeconds(getTimeout()))
+                .until(ExpectedConditions.or(
+                        ExpectedConditions.urlContains("lang="),
+                        ExpectedConditions.presenceOfElementLocated(org.openqa.selenium.By.tagName("body"))
+                ));
     }
 
     // Alias para mantener compatibilidad con implementaciones anteriores de la práctica.
