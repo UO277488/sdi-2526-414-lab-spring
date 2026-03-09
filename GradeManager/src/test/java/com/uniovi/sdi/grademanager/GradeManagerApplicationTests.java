@@ -1,9 +1,11 @@
 package com.uniovi.sdi.grademanager;
 
 import com.uniovi.sdi.grademanager.pageobjects.PO_HomeView;
+import com.uniovi.sdi.grademanager.pageobjects.PO_LoginView;
 import com.uniovi.sdi.grademanager.pageobjects.PO_Properties;
 import com.uniovi.sdi.grademanager.pageobjects.PO_SignUpView;
 import com.uniovi.sdi.grademanager.pageobjects.PO_View;
+import com.uniovi.sdi.grademanager.util.SeleniumUtils;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -129,19 +131,73 @@ class GradeManagerApplicationTests {
     }
 
     @Test
-    @Order(20)
+    @Order(9)
+    public void PR07() {
+        PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+        PO_LoginView.fillLoginForm(driver, "99999990A", "123456");
+        String checkText = "Notas del usuario";
+        List<WebElement> result = PO_View.checkElementBy(driver, "text", checkText);
+        Assertions.assertEquals(checkText, result.getFirst().getText());
+    }
+
+    @Test
+    @Order(10)
+    public void PR08() {
+        PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+        PO_LoginView.fillLoginForm(driver, "99999993D", "123456");
+        // Verificación por estructura de navegación (estable frente a idioma).
+        List<WebElement> marksMenu = PO_View.checkElementBy(driver, "id", "navbarDropdown");
+        Assertions.assertFalse(marksMenu.isEmpty());
+        // La opción /mark/add está dentro de un dropdown; primero hay que desplegarlo.
+        marksMenu.getFirst().click();
+        List<WebElement> addMarkOption = SeleniumUtils.waitLoadElementsBy(
+                driver, "free", "//a[@href='/mark/add']", PO_View.getTimeout()
+        );
+        Assertions.assertFalse(addMarkOption.isEmpty());
+    }
+
+    @Test
+    @Order(11)
+    public void PR09() {
+        PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+        PO_LoginView.fillLoginForm(driver, "99999988F", "123456");
+        // El menú de usuarios solo aparece para admin.
+        List<WebElement> usersMenu = PO_View.checkElementBy(driver, "id", "users-menu");
+        Assertions.assertFalse(usersMenu.isEmpty());
+    }
+
+    @Test
+    @Order(12)
+    public void PR10() {
+        PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+        PO_LoginView.fillLoginForm(driver, "99999990A", "123457");
+        List<WebElement> usernameInput = PO_View.checkElementBy(driver, "id", "username");
+        Assertions.assertFalse(usernameInput.isEmpty());
+    }
+
+    @Test
+    @Order(13)
+    public void PR11() {
+        PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+        PO_LoginView.fillLoginForm(driver, "99999990A", "123456");
+        String loginText = PO_HomeView.getP().getString("signup.message", PO_Properties.getSPANISH());
+        PO_HomeView.clickOption(driver, "logout", "text", loginText);
+    }
+
+    @Test
+    @Order(30)
     void AUX01() {
         Assertions.assertNotNull(driver.manage());
     }
 
     @Test
-    @Order(21)
+    @Order(31)
     void AUX02() {
         Assertions.assertNotNull(driver.navigate());
     }
 
     @Test
-    @Order(22)
+    @Order(32)
     void AUX03() {
         Assertions.assertNotNull(driver.getCurrentUrl());
     }
