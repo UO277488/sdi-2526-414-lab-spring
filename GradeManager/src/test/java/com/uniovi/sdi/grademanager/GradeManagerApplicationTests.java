@@ -31,13 +31,21 @@ class GradeManagerApplicationTests {
     static String Geckodriver = System.getenv().getOrDefault("GECKODRIVER_BIN", "/usr/local/bin/geckodriver");
 
     static WebDriver driver = getDriver(PathFirefox, Geckodriver);
-    static String URL = "http://localhost:8090/";
+    static String URL = resolveBaseUrl();
 
     public static WebDriver getDriver(String PathFirefox, String Geckodriver) {
         System.setProperty("webdriver.firefox.bin", PathFirefox);
         System.setProperty("webdriver.gecko.driver", Geckodriver);
         driver = new FirefoxDriver();
         return driver;
+    }
+
+    private static String resolveBaseUrl() {
+        String baseUrl = System.getProperty(
+                "test.baseUrl",
+                System.getenv().getOrDefault("TEST_BASE_URL", "http://localhost:8080/")
+        );
+        return baseUrl.endsWith("/") ? baseUrl : baseUrl + "/";
     }
 
     @BeforeEach

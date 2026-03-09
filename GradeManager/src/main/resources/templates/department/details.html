@@ -1,0 +1,53 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head">
+    <title th:text="#{department.details.page.title}">Department details page</title>
+</head>
+<body>
+<nav th:replace="fragments/nav"></nav>
+
+<div class="container" id="main-container">
+    <h2 th:text="#{department.details.title}">Department details</h2>
+    <div th:if="${successKey}" class="alert alert-success" th:text="#{__${successKey}__}">Success</div>
+
+    <div class="card">
+        <div class="card-header" th:text="#{department.form.name}">Name</div>
+        <div class="card-body">
+            <p class="card-text"
+               th:text="${department != null ? (#messages.msgOrNull(department.name) != null ? #messages.msgOrNull(department.name) : department.name) : '-'}">Computer Science</p>
+        </div>
+    </div>
+    <br>
+    <div class="card">
+        <div class="card-header" th:text="#{department.form.code}">Code</div>
+        <div class="card-body">
+            <p class="card-text" th:text="${department != null ? department.code : '-'}">COMP0001A</p>
+        </div>
+    </div>
+    <br>
+    <div class="card">
+        <div class="card-header" th:text="#{department.form.faculty}">Faculty</div>
+        <div class="card-body">
+            <p class="card-text"
+               th:text="${department != null ? (#messages.msgOrNull(department.faculty) != null ? #messages.msgOrNull(department.faculty) : department.faculty) : '-'}">Faculty of Science</p>
+        </div>
+    </div>
+    <br>
+    <div class="card">
+        <div class="card-header" th:text="#{department.form.phone}">Phone</div>
+        <div class="card-body">
+            <p class="card-text" th:text="${department != null ? department.phone : '-'}">985111111</p>
+        </div>
+    </div>
+    <br>
+    <div class="card">
+        <div class="card-header" th:text="#{department.form.professors}">Professors</div>
+        <div class="card-body">
+            <p class="card-text" th:text="${department != null ? department.professors : '-'}">24</p>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="fragments/footer"></footer>
+</body>
+</html>

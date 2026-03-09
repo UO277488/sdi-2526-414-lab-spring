@@ -1,0 +1,49 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head">
+    <title th:text="#{department.list.page.title}">Departments list page</title>
+</head>
+<body>
+<nav th:replace="fragments/nav"></nav>
+
+<div class="container" id="main-container">
+    <h2 th:text="#{department.list.title}">Departments</h2>
+    <p th:text="#{department.list.subtitle}">The departments currently in the system are the following:</p>
+    <div th:if="${successKey}" class="alert alert-success" th:text="#{__${successKey}__}">Success</div>
+    <div th:if="${errorKey}" class="alert alert-danger" th:text="#{__${errorKey}__}">Error</div>
+
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col" th:text="#{department.table.name}">Name</th>
+                <th scope="col" th:text="#{department.table.code}">Code</th>
+                <th scope="col" th:text="#{department.table.faculty}">Faculty</th>
+                <th scope="col" th:text="#{department.table.phone}">Phone</th>
+                <th scope="col" th:text="#{department.table.professors}">Professors</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="department : ${departmentsList}">
+                <td th:text="${#messages.msgOrNull(department.name) != null ? #messages.msgOrNull(department.name) : department.name}">Computer Science</td>
+                <td th:text="${department.code}">COMP0001A</td>
+                <td th:text="${#messages.msgOrNull(department.faculty) != null ? #messages.msgOrNull(department.faculty) : department.faculty}">Faculty of Science</td>
+                <td th:text="${department.phone}">985111111</td>
+                <td th:text="${department.professors}">24</td>
+                <td><a th:href="${'/department/details/' + department.id}" th:text="#{department.action.details}">details</a></td>
+                <td><a th:href="${'/department/edit/' + department.id}" th:text="#{department.action.edit}">edit</a></td>
+                <td><a th:href="${'/department/delete/' + department.id}" th:text="#{department.action.delete}"
+                       th:onclick="'return confirm(\'' + #{department.dialog.delete.confirm} + '\');'">delete</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div th:if="${#lists.isEmpty(departmentsList)}" th:text="#{department.list.empty}">No departments</div>
+</div>
+
+<footer th:replace="fragments/footer"></footer>
+</body>
+</html>

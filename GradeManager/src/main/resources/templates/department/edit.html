@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
+<head th:replace="fragments/head">
+    <title th:text="#{department.edit.page.title}">Edit department page</title>
+</head>
+<body>
+<nav th:replace="fragments/nav"></nav>
+<div class="container">
+    <h2 th:text="#{department.edit.title}">Edit department</h2>
+    <div th:if="${errorKey}" class="alert alert-danger" th:text="#{__${errorKey}__}">Error</div>
+
+    <form class="form-horizontal" method="post" th:action="${'/department/edit/' + department.id}">
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="name" th:text="#{department.form.name} + ':'">Name:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="name" name="name"
+                       th:value="${department.name}" th:placeholder="#{department.form.name.placeholder}" required/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="code" th:text="#{department.form.code} + ':'">Code:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="code" name="code"
+                       th:value="${department.code}" th:placeholder="#{department.form.code.placeholder}" required/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="faculty" th:text="#{department.form.faculty} + ':'">Faculty:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="faculty" name="faculty"
+                       th:value="${department.faculty}" th:placeholder="#{department.form.faculty.placeholder}" required/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="phone" th:text="#{department.form.phone} + ':'">Phone:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="phone" name="phone"
+                       th:value="${department.phone}" th:placeholder="#{department.form.phone.placeholder}" required/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="professors" th:text="#{department.form.professors} + ':'">Professors:</label>
+            <div class="col-sm-10">
+                <input type="number" min="0" class="form-control" id="professors" name="professors"
+                       th:value="${department.professors}" th:placeholder="#{department.form.professors.placeholder}" required/>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-primary" th:text="#{button.modify}">Modify</button>
+            </div>
+        </div>
+    </form>
+</div>
+<footer th:replace="fragments/footer"/>
+</body>
+</html>
