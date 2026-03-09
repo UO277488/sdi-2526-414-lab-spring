@@ -3,6 +3,7 @@ package com.uniovi.sdi.grademanager.pageobjects;
 import java.util.List;
 
 import com.uniovi.sdi.grademanager.util.SeleniumUtils;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -35,7 +36,14 @@ public class PO_View {
 	 * @return Se retornará la lista de elementos resultantes de la búsqueda.
 	 */
 	static public List<WebElement> checkElementByKey(WebDriver driver, String key, int locale) {
-		return SeleniumUtils.waitLoadElementsBy(driver, "text", p.getString(key, locale), getTimeout());
+		try {
+			return SeleniumUtils.waitLoadElementsBy(driver, "text", p.getString(key, locale), getTimeout());
+		} catch (TimeoutException ex) {
+			int fallbackLocale = locale == PO_Properties.getSPANISH()
+					? PO_Properties.getENGLISH()
+					: PO_Properties.getSPANISH();
+			return SeleniumUtils.waitLoadElementsBy(driver, "text", p.getString(key, fallbackLocale), getTimeout());
+		}
 
 
 	}

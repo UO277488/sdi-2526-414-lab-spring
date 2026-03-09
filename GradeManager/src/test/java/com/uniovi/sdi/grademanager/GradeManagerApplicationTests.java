@@ -2,6 +2,8 @@ package com.uniovi.sdi.grademanager;
 
 import com.uniovi.sdi.grademanager.pageobjects.PO_HomeView;
 import com.uniovi.sdi.grademanager.pageobjects.PO_Properties;
+import com.uniovi.sdi.grademanager.pageobjects.PO_SignUpView;
+import com.uniovi.sdi.grademanager.pageobjects.PO_View;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -91,36 +93,56 @@ class GradeManagerApplicationTests {
     @Test
     @Order(6)
     void PR05() {
-        Assertions.assertNotNull(driver.getPageSource());
+        PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
+        PO_SignUpView.fillForm(driver, "77777778A", "Josefo", "Perez", "77777", "77777");
+        String checkText = "Notas del usuario";
+        List<WebElement> result = PO_View.checkElementBy(driver, "text", checkText);
+        Assertions.assertEquals(checkText, result.getFirst().getText());
     }
 
     @Test
     @Order(7)
-    void PR06() {
-        Assertions.assertFalse(driver.getWindowHandle().isBlank());
+    public void PR06A() {
+        PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
+        PO_SignUpView.fillForm(driver, "99999990A", "Josefo", "Perez", "77777", "77777");
+        List<WebElement> result = PO_View.checkElementBy(
+                driver,
+                "free",
+                "//input[@name='dni']/parent::div/span[contains(@class,'text-danger')]"
+        );
+        Assertions.assertFalse(result.isEmpty());
+        Assertions.assertFalse(result.getFirst().getText().isBlank());
     }
 
     @Test
     @Order(8)
-    void PR07() {
-        Assertions.assertTrue(driver.getWindowHandles().size() >= 1);
+    public void PR06B() {
+        PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
+        PO_SignUpView.fillForm(driver, "99999990B", "Jose", "Perez", "77777", "77777");
+        List<WebElement> result = PO_View.checkElementBy(
+                driver,
+                "free",
+                "//input[@name='name']/parent::div/span[contains(@class,'text-danger')]"
+        );
+        Assertions.assertFalse(result.isEmpty());
+        Assertions.assertFalse(result.getFirst().getText().isBlank());
     }
 
     @Test
-    @Order(9)
-    void PR08() {
+    @Order(20)
+    void AUX01() {
         Assertions.assertNotNull(driver.manage());
     }
 
     @Test
-    @Order(10)
-    void PR09() {
+    @Order(21)
+    void AUX02() {
         Assertions.assertNotNull(driver.navigate());
     }
 
     @Test
-    @Order(11)
-    void PR10() {
+    @Order(22)
+    void AUX03() {
         Assertions.assertNotNull(driver.getCurrentUrl());
     }
 
