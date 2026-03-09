@@ -44,6 +44,16 @@
                     <a class="dropdown-item" href="/professor/list" th:text="#{nav.professors.list}">Ver profesores</a>
                 </div>
             </li>
+            <li class="nav-item dropdown" sec:authorize="hasAuthority('ROLE_ADMIN')">
+                <a class="nav-link dropdown-toggle" href="#" id="departmentDropdown" role="button" data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false"
+                   th:text="#{nav.departments}">Gestión de departamentos
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="/department/add" th:text="#{nav.departments.add}">Agregar departamento</a>
+                    <a class="dropdown-item" href="/department/list" th:text="#{nav.departments.list}">Ver departamentos</a>
+                </div>
+            </li>
         </ul>
         <ul class="navbar-nav justify-content-end">
             <li class="nav-item dropdown">
@@ -93,6 +103,7 @@
         var markLink = document.getElementById("navbarDropdown");
         var userLink = document.getElementById("userDropDown");
         var professorLink = document.getElementById("profesorDropdown");
+        var departmentLink = document.getElementById("departmentDropdown");
         var homeLink = document.getElementById("nav-home");
         var signupLink = document.getElementById("nav-signup");
         var loginLink = document.getElementById("nav-login");
@@ -101,6 +112,7 @@
         if (path.indexOf("/mark") === 0) markLink && markLink.classList.add("active");
         if (path.indexOf("/user") === 0) userLink && userLink.classList.add("active");
         if (path.indexOf("/professor") === 0) professorLink && professorLink.classList.add("active");
+        if (path.indexOf("/department") === 0) departmentLink && departmentLink.classList.add("active");
         if (path === "/signup") signupLink && signupLink.classList.add("active");
         if (path === "/login") loginLink && loginLink.classList.add("active");
     })();

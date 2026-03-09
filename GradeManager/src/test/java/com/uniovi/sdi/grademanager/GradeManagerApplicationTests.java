@@ -59,6 +59,9 @@ class GradeManagerApplicationTests {
         driver.quit();
     }
 
+
+
+
     @Test
     @Order(1)
     void PR01A() {
@@ -100,7 +103,7 @@ class GradeManagerApplicationTests {
         PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
         PO_SignUpView.fillForm(driver, "77777778A", "Josefo", "Perez", "77777", "77777");
         String checkText = "Notas del usuario";
-        List<WebElement> result = PO_View.checkElementBy(driver, "text", checkText);
+        List<WebElement> result = getElementViewTest(  checkText);
         Assertions.assertEquals(checkText, result.getFirst().getText());
     }
 
@@ -138,7 +141,7 @@ class GradeManagerApplicationTests {
         PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
         PO_LoginView.fillLoginForm(driver, "99999990A", "123456");
         String checkText = "Notas del usuario";
-        List<WebElement> result = PO_View.checkElementBy(driver, "text", checkText);
+        List<WebElement> result = getElementViewTest( checkText);
         Assertions.assertEquals(checkText, result.getFirst().getText());
     }
 
@@ -148,7 +151,7 @@ class GradeManagerApplicationTests {
         PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
         PO_LoginView.fillLoginForm(driver, "99999993D", "123456");
         // Verificación por estructura de navegación (estable frente a idioma).
-        List<WebElement> marksMenu = PO_View.checkElementBy(driver, "id", "navbarDropdown");
+        List<WebElement> marksMenu = getElementViewSpecificTypeTest( "id", "navbarDropdown");
         Assertions.assertFalse(marksMenu.isEmpty());
         // La opción /mark/add está dentro de un dropdown; primero hay que desplegarlo.
         marksMenu.getFirst().click();
@@ -164,7 +167,7 @@ class GradeManagerApplicationTests {
         PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
         PO_LoginView.fillLoginForm(driver, "99999988F", "123456");
         // El menú de usuarios solo aparece para admin.
-        List<WebElement> usersMenu = PO_View.checkElementBy(driver, "id", "users-menu");
+        List<WebElement> usersMenu = getElementViewSpecificTypeTest( "id", "users-menu");
         Assertions.assertFalse(usersMenu.isEmpty());
     }
 
@@ -173,7 +176,7 @@ class GradeManagerApplicationTests {
     public void PR10() {
         PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
         PO_LoginView.fillLoginForm(driver, "99999990A", "123457");
-        List<WebElement> usernameInput = PO_View.checkElementBy(driver, "id", "username");
+        List<WebElement> usernameInput = getElementViewSpecificTypeTest( "id", "username");
         Assertions.assertFalse(usernameInput.isEmpty());
     }
 
@@ -189,73 +192,65 @@ class GradeManagerApplicationTests {
     @Test
     @Order(14)
     public void PR12() {
-        PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
-        PO_LoginView.fillLoginForm(driver, "99999990A", "123456");
+        loginTest();
         String checkText = "Notas del usuario";
-        List<WebElement> result = PO_View.checkElementBy(driver, "text", checkText);
+        List<WebElement> result = getElementViewTest( checkText);
         Assertions.assertEquals(checkText, result.getFirst().getText());
         List<WebElement> marksList = SeleniumUtils.waitLoadElementsBy(driver, "free", "//tbody/tr", PO_View.getTimeout());
         Assertions.assertEquals(4, marksList.size());
-        String loginText = PO_HomeView.getP().getString("signup.message", PO_Properties.getSPANISH());
-        PO_PrivateView.clickOption(driver, "logout", "text", loginText);
+        logoutTest();
     }
 
     @Test
     @Order(15)
     public void PR13() {
-        PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
-        PO_LoginView.fillLoginForm(driver, "99999990A", "123456");
+        loginTest();
         String checkText = "Notas del usuario";
-        PO_View.checkElementBy(driver, "text", checkText);
+        getElementViewTest( checkText);
         By detailsLink = By.xpath("//td[contains(text(), 'Nota A2')]/following-sibling::*[2]/a[contains(@href, '/mark/details/')]");
         driver.findElement(detailsLink).click();
         checkText = "Detalles de la nota";
-        List<WebElement> result = PO_View.checkElementBy(driver, "text", checkText);
+        List<WebElement> result = getElementViewTest( checkText);
         Assertions.assertEquals(checkText, result.getFirst().getText());
-        String loginText = PO_HomeView.getP().getString("signup.message", PO_Properties.getSPANISH());
-        PO_PrivateView.clickOption(driver, "logout", "text", loginText);
+        logoutTest();
     }
 
     @Test
     @Order(16)
     public void PR14() {
-        PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
-        PO_LoginView.fillLoginForm(driver, "99999993D", "123456");
-        PO_View.checkElementBy(driver, "text", "99999993D");
-        List<WebElement> marksMenu = PO_View.checkElementBy(driver, "id", "navbarDropdown");
+        loginTest();
+        loginTestSpecificUser("99999993D");
+        List<WebElement> marksMenu = getElementViewSpecificTypeTest( "id", "navbarDropdown");
         marksMenu.getFirst().click();
-        List<WebElement> addMarkOption = PO_View.checkElementBy(driver, "free", "//a[contains(@href, '/mark/add')]");
+        List<WebElement> addMarkOption = getElementViewSpecificTypeTest( "free", "//a[contains(@href, '/mark/add')]");
         addMarkOption.getFirst().click();
         String checkText = "Nota sistemas distribuidos";
         PO_PrivateView.fillFormAddMark(driver, 3, checkText, "8");
-        List<WebElement> pageLinks = PO_View.checkElementBy(driver, "free", "//a[contains(@class, 'page-link')]");
+        List<WebElement> pageLinks = getElementViewSpecificTypeTest( "free", "//a[contains(@class, 'page-link')]");
         pageLinks.getLast().click();
-        List<WebElement> createdMark = PO_View.checkElementBy(driver, "text", checkText);
+        List<WebElement> createdMark =  getElementViewTest( checkText);
         Assertions.assertEquals(checkText, createdMark.getFirst().getText());
-        String loginText = PO_HomeView.getP().getString("signup.message", PO_Properties.getSPANISH());
-        PO_PrivateView.clickOption(driver, "logout", "text", loginText);
+        logoutTest();
     }
 
     @Test
     @Order(17)
     public void PR15() {
-        PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
-        PO_LoginView.fillLoginForm(driver, "99999993D", "123456");
-        PO_View.checkElementBy(driver, "text", "99999993D");
-        List<WebElement> marksMenu = PO_View.checkElementBy(driver, "id", "navbarDropdown");
+        loginTest();
+        loginTestSpecificUser("99999993D");
+        List<WebElement> marksMenu = getElementViewSpecificTypeTest( "id", "navbarDropdown");
         marksMenu.getFirst().click();
-        List<WebElement> listMarkOption = PO_View.checkElementBy(driver, "free", "//a[contains(@href, '/mark/list')]");
+        List<WebElement> listMarkOption = getElementViewSpecificTypeTest( "free", "//a[contains(@href, '/mark/list')]");
         listMarkOption.getFirst().click();
-        List<WebElement> pageLinks = PO_View.checkElementBy(driver, "free", "//a[contains(@class, 'page-link')]");
+        List<WebElement> pageLinks = getElementViewSpecificTypeTest("free", "//a[contains(@class, 'page-link')]");
         pageLinks.getLast().click();
-        List<WebElement> deleteLink = PO_View.checkElementBy(driver, "free",
+        List<WebElement> deleteLink = getElementViewSpecificTypeTest("free",
                 "//td[contains(text(), 'Nota sistemas distribuidos')]/following-sibling::*/a[contains(@href, '/mark/delete/')]");
         deleteLink.getFirst().click();
-        pageLinks = PO_View.checkElementBy(driver, "free", "//a[contains(@class, 'page-link')]");
+        pageLinks = getElementViewSpecificTypeTest("free", "//a[contains(@class, 'page-link')]");
         pageLinks.getLast().click();
         SeleniumUtils.waitTextIsNotPresentOnPage(driver, "Nota sistemas distribuidos", PO_View.getTimeout());
-        String loginText = PO_HomeView.getP().getString("signup.message", PO_Properties.getSPANISH());
-        PO_PrivateView.clickOption(driver, "logout", "text", loginText);
+        logoutTest();
     }
 
     @Test
@@ -274,6 +269,29 @@ class GradeManagerApplicationTests {
     @Order(32)
     void AUX03() {
         Assertions.assertNotNull(driver.getCurrentUrl());
+    }
+
+    private void loginTest(){
+        PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+        PO_LoginView.fillLoginForm(driver, "99999993D", "123456");
+    }
+
+    private void logoutTest(){
+        String loginText = PO_HomeView.getP().getString("signup.message", PO_Properties.getSPANISH());
+        PO_PrivateView.clickOption(driver, "logout", "text", loginText);
+    }
+
+    private void loginTestSpecificUser(String dni){
+        PO_View.checkElementBy(driver, "text", dni);
+
+    }
+
+    private List<WebElement> getElementViewSpecificTypeTest(String type, String test){
+        return PO_View.checkElementBy(driver, type, test);
+    }
+
+    private List<WebElement> getElementViewTest(String checkText){
+        return PO_View.checkElementBy(driver, "text", checkText);
     }
 
 }

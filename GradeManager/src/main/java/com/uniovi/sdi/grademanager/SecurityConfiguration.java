@@ -43,6 +43,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/mark/delete/*").hasAuthority("ROLE_PROFESSOR")
                         .requestMatchers("/mark/**").hasAnyAuthority("ROLE_STUDENT", "ROLE_PROFESSOR", "ROLE_ADMIN")
                         .requestMatchers("/user/**").hasRole("ADMIN")
+                        .requestMatchers("/department/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
